@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, MenuController, NavController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -8,10 +8,18 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public menuController: MenuController) {
 
   }
-
+  // evento de lifecycle do ionic para quando a página for entrar executar uma ação
+  ionViewWillEnter(){
+    this.menuController.swipeEnable(false);
+  }
+  // evento de lifecycle do ionic para quando sair da página executar uma ação
+  ionViewDidLeave(){
+    this.menuController.swipeEnable(true);
+  }
+  
   login(){
     /**nota: para navegar para outra página, sem empilhá-la, deve-se utilizar
      * o método setRoot no lugar do método push
