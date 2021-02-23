@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { subscribeOn } from 'rxjs/operator/subscribeOn';
+import { CategoriaService } from '../../services/domain/categoria.service';
 
 /**
  * Generated class for the CategoriasPage page.
@@ -15,11 +17,25 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class CategoriasPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(   
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public categoriaService : CategoriaService
+    ) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CategoriasPage');
+    /* 
+    Em uma chamada Assincrona, é necessário se inscrever 
+    para esperar a resposta, no angular utiliza-se o método subscribe()
+    que pode ter uma função de callback ou erro.
+    */
+    this.categoriaService.findAll().subscribe(response => {
+      console.log(response);
+    },
+    error => {
+      console.log(error);
+    });
   }
 
 }
