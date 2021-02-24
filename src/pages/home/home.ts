@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, MenuController, NavController } from 'ionic-angular';
+import { CredenciaisDTO } from '../../models/credenciais.dto';
 
 @IonicPage()
 @Component({
@@ -7,6 +8,12 @@ import { IonicPage, MenuController, NavController } from 'ionic-angular';
   templateUrl: 'home.html'
 })
 export class HomePage {
+
+
+  creds : CredenciaisDTO = {
+    email: "",
+    senha: ""
+  }
 
   constructor(public navCtrl: NavController, public menuController: MenuController) {
 
@@ -21,6 +28,8 @@ export class HomePage {
   }
   
   login(){
+    console.log(this.creds);
+    
     /**nota: para navegar para outra página, sem empilhá-la, deve-se utilizar
      * o método setRoot no lugar do método push
      */
