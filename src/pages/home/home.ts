@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, MenuController, NavController } from 'ionic-angular';
 import { CredenciaisDTO } from '../../models/credenciais.dto';
+import { AuthService } from '../../services/auth.service';
 
 @IonicPage()
 @Component({
@@ -15,7 +16,11 @@ export class HomePage {
     senha: ""
   }
 
-  constructor(public navCtrl: NavController, public menuController: MenuController) {
+  constructor(
+    public navCtrl: NavController, 
+    public menuController: MenuController,
+    public auth: AuthService
+    ) {
 
   }
   // evento de lifecycle do ionic para quando a página for entrar executar uma ação
@@ -28,12 +33,16 @@ export class HomePage {
   }
   
   login(){
-    console.log(this.creds);
+   
     
-    /**nota: para navegar para outra página, sem empilhá-la, deve-se utilizar
-     * o método setRoot no lugar do método push
-     */
-    this.navCtrl.setRoot('CategoriasPage');
+    this.auth.authenticate(this.creds)
+    .subscribe(response =>{
+      this.auth.successfullLogin(response.headers.get('Authorization'));
+      this.navCtrl.setRoot('CategoriasPage');
+    },
+    error => {}
+    )
+    
   }
 
 }
