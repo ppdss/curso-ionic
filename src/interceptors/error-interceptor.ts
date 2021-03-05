@@ -1,5 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AlertController } from "ionic-angular";
 import { Observable } from "rxjs/Rx";
 import { StorageService } from "../services/storage.service";
 
@@ -9,7 +10,8 @@ import { StorageService } from "../services/storage.service";
 export class ErrorInterceptor implements HttpInterceptor {    
 
     constructor(
-        public storage: StorageService
+        public storage: StorageService,
+        public alertCtrl: AlertController
     ){} 
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -27,17 +29,69 @@ export class ErrorInterceptor implements HttpInterceptor {
             console.log(errorObj);
 
             switch(errorObj.status) {
+                case 401:
+                    this.handle401();
+                    break;
                 case 403: 
-                this.handle403();
-                break;
+                    this.handle403();
+                    break;
+                case 404: 
+                this.handle404();
+                    break;
+                default:
+                    this.handlerDefaultError(errorObj);
             }
 
             return Observable.throw(error);
         }) as any;
     }
+    handle401() {
+        let alert = this.alertCtrl.create({
+            title: 'Erro 401: Falha de autenticação!',
+            message: 'Email ou senha incorretos.',
+            enableBackdropDismiss: false, // para sair do alert clicar no X, não fora do alert
+            buttons: [
+                
+                {
+                        text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
 
     handle403(){
         this.storage.setLocalUser(null);
+    }
+
+    handle404(){
+        let alert = this.alertCtrl.create({
+            title: '404 Not Found',
+            message: 'Erro 404, recurso não encontrado! ',
+            enableBackdropDismiss: false, // para sair do alert clicar no X, não fora do alert
+            buttons: [
+                
+                {
+                        text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+
+    handlerDefaultError(errorObj){
+        let alert = this.alertCtrl.create({
+            title: 'Erro ' +errorObj.status + ': '+ errorObj.error ,
+            message: errorObj.message,
+            enableBackdropDismiss: false, // para sair do alert clicar no X, não fora do alert
+            buttons: [
+                
+                {
+                        text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
     }
 }
 
