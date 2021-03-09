@@ -24,7 +24,7 @@ export class AuthService {
             responseType: 'text'//  resposta vem corpo vazio, por isso para o framewordk nao dar error de parse achando que é json é necessário especificar tipo text
         })
     }
-    refreshToken() {
+    refreshToken() { 
         return this.http.post(
            `${API_CONFIG.baseUrl}/auth/refresh_token`, 
            {}, 
