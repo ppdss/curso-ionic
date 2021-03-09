@@ -43,8 +43,6 @@ export class HomePage {
   }
   
   login(){
-   
-    
     this.auth.authenticate(this.creds)
     .subscribe(response =>{
       this.auth.successfullLogin(response.headers.get('Authorization'));
@@ -53,6 +51,10 @@ export class HomePage {
     error => {}
     )
     
+  }
+
+  registrar(){
+    this.navCtrl.push('SignupPage');
   }
 
 }

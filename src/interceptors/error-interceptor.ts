@@ -62,19 +62,6 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     handle403(){
         this.storage.setLocalUser(null);
-        let alert = this.alertCtrl.create({
-            title: 'Sessão finalizada',
-            message: 'Sessão finalizada, por favor refaça login.',
-            enableBackdropDismiss: false, // para sair do alert clicar no X, não fora do alert
-            buttons: [
-                
-                {
-                        text: 'Ok'
-                }
-            ]
-        });
-        alert.present();
-        
     }
 
     handle404(){
