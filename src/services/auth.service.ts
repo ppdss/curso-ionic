@@ -21,10 +21,19 @@ export class AuthService {
         creds, 
         {// objeto especificando que essa req vai retornar um objeto do tipo response, para que eu tenha acesso ao header
             observe: 'response',
-            responseType: 'text'
+            responseType: 'text'//  resposta vem corpo vazio, por isso para o framewordk nao dar error de parse achando que é json é necessário especificar tipo text
         })
     }
-
+    refreshToken() {
+        return this.http.post(
+           `${API_CONFIG.baseUrl}/auth/refresh_token`, 
+           {}, 
+           {// objeto especificando que essa req vai retornar um objeto do tipo response, para que eu tenha acesso ao header
+               observe: 'response',
+               responseType: 'text' //  resposta vem corpo vazio, por isso para o framewordk nao dar error de parse achando que é json é necessário especificar tipo text
+           })
+       }
+   
     successfullLogin(authorizationValue : string) {
         
         let tok = authorizationValue.substring(7); // removendo a palavra Bater
