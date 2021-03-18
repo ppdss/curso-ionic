@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { CidadeDTO } from '../../models/cidade.dto';
 import { EstadoDTO } from '../../models/estado.dto';
 import { CidadeService } from '../../services/domain/cidade.service';
+import { ClienteService } from '../../services/domain/cliente.service';
 import { EstadoService } from '../../services/domain/estado.service';
 
 /**
@@ -30,6 +31,9 @@ export class SignupPage {
     public formBuilder: FormBuilder,
     public cidadeService: CidadeService,
     public estadoService: EstadoService,
+    public clienteService: ClienteService,
+    public alertCtr: AlertController,
+
     ) {
 
       this.formGroup = this.formBuilder.group({
@@ -42,7 +46,7 @@ export class SignupPage {
         numero:['25', [Validators.required]],
         complemento:['Ap 203'],
         bairro:['Copacabana', [Validators.required]],
-        cep:['31210650', [Validators.required]],
+        cep:['31210650', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
         telefone1:['91225564', [Validators.required]],
         telefone2:[],
         telefone3:[],
@@ -70,8 +74,29 @@ export class SignupPage {
     })
   }
   signupUser(){
-    console.log("Usuario Registrado");
+    this.clienteService.insert(this.formGroup.value)
+    .subscribe(response => {
+      this.showInsertOk();
+    },
+    error=>{}
+    )
     
+  }
+  showInsertOk(){
+    let alert = this.alertCtr.create({
+      title:'Sucesso!',
+      message: 'Cadastro efetuado com sucesso',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: ()=> {
+            this.navCtrl.setRoot('HomePage');
+          }
+        }
+      ]
+    })
+    alert.present();
   }
 
 }
