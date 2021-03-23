@@ -35,7 +35,7 @@ export class ProfilePage {
    if(localUser && localUser.email){
      this.clienteService.findByEmail(localUser.email).subscribe(
        response =>{
-         this.cliente = response;
+         this.cliente = response as ClienteDTO; // cast
          // buscando imagem do bucket s3
          this.getImageIfExists();
        },
