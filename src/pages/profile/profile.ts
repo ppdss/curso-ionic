@@ -28,25 +28,28 @@ export class ProfilePage {
     }
 
   ionViewDidLoad() {
-   let localUser = this.storage.getLocalUser();
-   if(localUser && localUser.email){
-     this.clienteService.findByEmail(localUser.email).subscribe(
-       response =>{
-         this.cliente = response as ClienteDTO; // cast
-         // buscando imagem do bucket s3
-         this.getImageIfExists();
-       },
-       error =>{
-         if(error.status == 403) {
-           this.navCtrl.setRoot('HomePage');
-         }
-       }
-     )
-   }else{
-     this.navCtrl.setRoot('HomePage');
-   }
+    this.loadData();
   }
 
+  loadData(){
+    let localUser = this.storage.getLocalUser();
+    if(localUser && localUser.email){
+      this.clienteService.findByEmail(localUser.email).subscribe(
+        response =>{
+          this.cliente = response as ClienteDTO; // cast
+          // buscando imagem do bucket s3
+          this.getImageIfExists();
+        },
+        error =>{
+          if(error.status == 403) {
+            this.navCtrl.setRoot('HomePage');
+          }
+        }
+      )
+    }else{
+      this.navCtrl.setRoot('HomePage');
+    }
+  }
   getImageIfExists() {
     this.clienteService.getImageFromBucket(this.cliente.id).subscribe(
       response => {
@@ -74,4 +77,15 @@ export class ProfilePage {
     
   }
 
+  sendPicture() {
+    this.clienteService.uploadPicture(this.picture)
+    .subscribe(response =>{
+      this.picture = null;
+      this.loadData();
+    },
+    error =>{}) ;
+  }
+  cancel(){
+    this.picture = null;
+  }
 }
